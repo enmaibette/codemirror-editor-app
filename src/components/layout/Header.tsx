@@ -52,27 +52,27 @@ export function Header() {
                 Python OOP
               </Link>
             </BreadcrumbItem>
-                {isChallengePage && challengeLabel && (
+            {isChallengePage && challengeLabel && (
               <>
                 <BreadcrumbSeparator />
                 <BreadcrumbItem>
-                      <BreadcrumbPage className="text-sm">{challengeLabel}</BreadcrumbPage>
+                  <BreadcrumbPage className="text-sm">{challengeLabel}</BreadcrumbPage>
                 </BreadcrumbItem>
               </>
             )}
           </BreadcrumbList>
         </Breadcrumb>
       </div>
-
-      {/* Action buttons */}
-      <div className="flex items-center gap-2">
-        <Button variant="outline" size="sm" onClick={triggerRun}>
-          Run
-        </Button>
-        <Button variant="default" size="sm">
-          Submit
-        </Button>
-      </div>
+      {isChallengePage && (
+        <div className="flex items-center gap-2">
+          <Button variant="outline" size="sm" onClick={triggerRun}>
+            Run
+          </Button>
+          <Button variant="default" size="sm">
+            Submit
+          </Button>
+        </div>
+      )}
     </header>
   );
 }
