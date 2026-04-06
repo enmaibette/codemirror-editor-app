@@ -38,6 +38,7 @@ beforeEach(() => {
   });
   useUIStore.setState({
     isLeftPanelOpen: true,
+    isConsolePanelOpen: true,
     consoleActiveTab: 'output',
     descriptionActiveTab: 'description',
     outputLines: [],
@@ -45,44 +46,42 @@ beforeEach(() => {
 });
 
 describe('Header', () => {
-  it('renders the logo text "</> PyOOP Learn"', () => {
+  it('renders the logo text "</> Python OOP"', () => {
     renderHeader();
-    expect(screen.getByText(/PyOOP Learn/)).toBeInTheDocument();
+    expect(screen.getByText(/Python OOP/)).toBeInTheDocument();
   });
 
-  it('renders logo and Python OOP as links to landing page', () => {
+  it('renders logo as a link to the landing page', () => {
     renderHeader('/challenge/1');
-    expect(screen.getByRole('link', { name: /pyoop learn/i })).toHaveAttribute('href', '/');
     expect(screen.getByRole('link', { name: /python oop/i })).toHaveAttribute('href', '/');
   });
 
-  it('renders a "Run" button', () => {
-    renderHeader();
+  it('renders a "Run" button on a challenge page', () => {
+    renderHeader('/challenge/1');
     expect(screen.getByRole('button', { name: /run/i })).toBeInTheDocument();
   });
 
-  it('renders a "Submit" button', () => {
-    renderHeader();
+  it('renders a "Submit" button on a challenge page', () => {
+    renderHeader('/challenge/1');
     expect(screen.getByRole('button', { name: /submit/i })).toBeInTheDocument();
   });
 
   it('Run button has the outline variant (border class applied)', () => {
-    renderHeader();
+    renderHeader('/challenge/1');
     const runButton = screen.getByRole('button', { name: /run/i });
-    // The shadcn outline variant adds a border class
     expect(runButton.className).toMatch(/border/);
   });
 
   it('clicking Run calls triggerRun', async () => {
     const user = userEvent.setup();
-    renderHeader();
+    renderHeader('/challenge/1');
     await user.click(screen.getByRole('button', { name: /run/i }));
     expect(mockTriggerRun).toHaveBeenCalledTimes(1);
   });
 
   it('shows "Python OOP" in breadcrumb on the home route', () => {
     renderHeader('/');
-    expect(screen.getByText('Python OOP')).toBeInTheDocument();
+    expect(screen.getByText(/Python OOP/)).toBeInTheDocument();
   });
 
   it('shows the route-based challenge breadcrumb on a challenge route', () => {
@@ -99,17 +98,14 @@ describe('Header', () => {
     const user = userEvent.setup();
     renderHeader('/challenge/1');
 
-    await user.click(screen.getByRole('link', { name: /pyoop learn/i }));
+    await user.click(screen.getByRole('link', { name: /python oop/i }));
 
     expect(screen.getByTestId('location-path')).toHaveTextContent('/');
   });
 
-  it('navigates to landing page when Python OOP breadcrumb is clicked', async () => {
-    const user = userEvent.setup();
-    renderHeader('/challenge/1');
-
-    await user.click(screen.getByRole('link', { name: /python oop/i }));
-
-    expect(screen.getByTestId('location-path')).toHaveTextContent('/');
+  it('does not render Run/Submit buttons on the home route', () => {
+    renderHeader('/');
+    expect(screen.queryByRole('button', { name: /run/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /submit/i })).not.toBeInTheDocument();
   });
 });

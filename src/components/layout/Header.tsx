@@ -32,24 +32,14 @@ export function Header() {
         z-10
       "
     >
-      {/* Logo */}
-      <div className="flex items-center gap-4">
-        <Link
-          to="/"
-          className="text-[var(--accent)] font-semibold text-sm tracking-wide select-none hover:opacity-90"
-        >
-          {'</>'} PyOOP Learn
-        </Link>
-
-        {/* Separator */}
-        <span className="text-[var(--border)] text-lg select-none">|</span>
-
-        {/* Breadcrumb */}
         <Breadcrumb>
           <BreadcrumbList>
             <BreadcrumbItem>
-              <Link to="/" className="text-sm text-[var(--muted)] hover:text-[var(--text)]">
-                Python OOP
+              <Link
+                to="/"
+                className="text-[var(--accent)] font-semibold text-sm tracking-wide select-none hover:opacity-90"
+              >
+                {'</>'} Python OOP
               </Link>
             </BreadcrumbItem>
             {isChallengePage && challengeLabel && (
@@ -62,7 +52,6 @@ export function Header() {
             )}
           </BreadcrumbList>
         </Breadcrumb>
-      </div>
       {isChallengePage && (
         <div className="flex items-center gap-2">
           <Button variant="outline" size="sm" onClick={triggerRun}>

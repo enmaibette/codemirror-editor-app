@@ -9,8 +9,7 @@ interface ConsolePanelProps {
   onTabChange: (tab: ConsoleTab) => void;
   outputLines: string[];
   testCases: TestCase[];
-  onClose: () => void;
-  onOpen: () => void;
+  onOpenChange: (open: boolean) => void;
   isOpen: boolean;
 }
 
@@ -19,8 +18,7 @@ export function ConsolePanel({
   onTabChange,
   outputLines,
   testCases,
-  onClose,
-  onOpen,
+  onOpenChange,
   isOpen,
 }: ConsolePanelProps) {
   return (
@@ -28,7 +26,7 @@ export function ConsolePanel({
       <Tabs
         value={activeTab}
         onValueChange={(v) => {
-          if (!isOpen) onOpen();
+          if (!isOpen) onOpenChange(true);
           onTabChange(v as ConsoleTab);
         }}
         className="flex flex-col h-full"
@@ -41,7 +39,7 @@ export function ConsolePanel({
           <button
             type="button"
             aria-label="Close console panel"
-            onClick={onClose}
+            onClick={() => onOpenChange(!isOpen)}
             className="p-2 mr-1 text-[var(--muted)] hover:text-[var(--text)]"
           >
             {isOpen ? <ChevronDown className="h-4 w-4" /> : <ChevronUp className="h-4 w-4" />}

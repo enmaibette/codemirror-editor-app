@@ -1,9 +1,9 @@
-import { useEffect, useCallback } from 'react';
+import { useEffect } from 'react';
 import { useParams, Navigate } from 'react-router-dom';
 import { SplitLayout } from '@/components/layout/SplitLayout';
 import { DescriptionPanel } from '@/features/description-panel/DescriptionPanel';
-import { EditorPanel } from '@/features/editor/EditorPanel';
 import { ConsolePanel } from '@/features/console/ConsolePanel';
+import { useCodeMirror } from '@/features/editor/useCodeMirror';
 import { useChallenge } from '@/hooks/useChallenge';
 import { useChallengeStore } from '@/stores/challengeStore';
 import { useUIStore } from '@/stores/uiStore';
@@ -25,9 +25,8 @@ export default function ChallengePage() {
   const setConsolePanelOpen = useUIStore((state) => state.setConsolePanelOpen);
   const isConsolePanelOpen = useUIStore((state) => state.isConsolePanelOpen);
 
-  const handleDescriptionClose = useCallback(() => setLeftPanelOpen(false), [setLeftPanelOpen]);
-
   const challenge = useChallenge(id);
+  const { containerRef: editorRef } = useCodeMirror({ initialDoc: editorContent, onChange: setEditorContent });
 
   useEffect(() => {
     if (id && challenge) {
@@ -44,33 +43,22 @@ export default function ChallengePage() {
     <div className="h-full w-full overflow-hidden">
       <SplitLayout
         isLeftPanelOpen={isLeftPanelOpen}
-        onLeftPanelClose={() => setLeftPanelOpen(false)}
-        onLeftPanelOpen={() => setLeftPanelOpen(true)}
+        onLeftPanelOpenChange={setLeftPanelOpen}
         isConsolePanelOpen={isConsolePanelOpen}
-        onConsolePanelClose={() => setConsolePanelOpen(false)}
-        onConsolePanelOpen={() => setConsolePanelOpen(true)}
+        onConsolePanelOpenChange={setConsolePanelOpen}
         descriptionPanel={
           <DescriptionPanel
             challenge={challenge}
             activeTab={descriptionActiveTab}
             onTabChange={setDescriptionActiveTab}
-            onClose={handleDescriptionClose}
+            onOpenChange={setLeftPanelOpen}
+            isOpen={isLeftPanelOpen}
           />
         }
         editorPanel={
-          <EditorPanel
-            value={editorContent}
-            onChange={setEditorContent}
-            showSidebar={!isLeftPanelOpen}
-            onFileClick={() => {
-              setDescriptionActiveTab('description');
-              setLeftPanelOpen(true);
-            }}
-            onHintClick={() => {
-              setDescriptionActiveTab('hint');
-              setLeftPanelOpen(true);
-            }}
-          />
+          <div className="flex h-full w-full overflow-hidden bg-[var(--background)]">
+            <div ref={editorRef} className="flex-1 h-full" />
+          </div>
         }
         consolePanel={
           <ConsolePanel
@@ -78,8 +66,7 @@ export default function ChallengePage() {
             onTabChange={setConsoleActiveTab}
             outputLines={outputLines}
             testCases={challenge.testCases}
-            onClose={() => setConsolePanelOpen(!isConsolePanelOpen)}
-            onOpen={() => setConsolePanelOpen(true)}
+            onOpenChange={setConsolePanelOpen}
             isOpen={isConsolePanelOpen}
           />
         }

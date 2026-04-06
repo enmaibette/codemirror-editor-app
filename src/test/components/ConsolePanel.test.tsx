@@ -14,8 +14,7 @@ const defaultProps = {
   onTabChange: vi.fn(),
   outputLines: [],
   testCases: [],
-  onClose: vi.fn(),
-  onOpen: vi.fn(),
+  onOpenChange: vi.fn(),
   isOpen: true,
 };
 
@@ -80,7 +79,7 @@ describe('ConsolePanel', () => {
   it('calls onOpen when a tab is clicked while closed', async () => {
     const user = userEvent.setup();
     const handleOpen = vi.fn();
-    render(<ConsolePanel {...defaultProps} isOpen={false} onOpen={handleOpen} />);
+    render(<ConsolePanel {...defaultProps} isOpen={false} onOpenChange={handleOpen} />);
     await user.click(screen.getByText('Test Cases'));
     expect(handleOpen).toHaveBeenCalled();
   });

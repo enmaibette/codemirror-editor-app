@@ -8,11 +8,9 @@ import {
 
 interface SplitLayoutProps {
   isLeftPanelOpen: boolean;
-  onLeftPanelClose: () => void;
-  onLeftPanelOpen?: () => void;
+  onLeftPanelOpenChange: (open: boolean) => void;
   isConsolePanelOpen: boolean;
-  onConsolePanelClose: () => void;
-  onConsolePanelOpen: () => void;
+  onConsolePanelOpenChange: (open: boolean) => void;
   descriptionPanel: React.ReactNode;
   editorPanel: React.ReactNode;
   consolePanel: React.ReactNode;
@@ -20,11 +18,9 @@ interface SplitLayoutProps {
 
 export function SplitLayout({
   isLeftPanelOpen,
-  onLeftPanelClose,
-  onLeftPanelOpen,
+  onLeftPanelOpenChange,
   isConsolePanelOpen,
-  onConsolePanelClose,
-  onConsolePanelOpen,
+  onConsolePanelOpenChange,
   descriptionPanel,
   editorPanel,
   consolePanel,
@@ -50,7 +46,8 @@ export function SplitLayout({
     if (!panel) return;
 
     if (isConsolePanelOpen && panel.isCollapsed()) {
-      panel.expand();
+     // panel.expand();
+      panel.resize(50)
     }
 
     if (!isConsolePanelOpen && !panel.isCollapsed()) {
@@ -60,43 +57,40 @@ export function SplitLayout({
 
   return (
     <ResizablePanelGroup direction="horizontal" className="h-full w-full">
-      {/* Left panel — description */}
+
       <ResizablePanel
         id="description-panel"
         order={1}
         ref={leftPanelRef}
-        defaultSize={isLeftPanelOpen ? 30 : 0}
+        defaultSize={30}
         minSize={20}
         maxSize={50}
         collapsible
-        collapsedSize={0}
-        onCollapse={onLeftPanelClose}
-        onExpand={onLeftPanelOpen}
+        collapsedSize={2}
+        onCollapse={() => onLeftPanelOpenChange(false)}
+        onExpand={() => onLeftPanelOpenChange(true)}
         className="flex flex-col"
       >
         {descriptionPanel}
       </ResizablePanel>
-      {isLeftPanelOpen && <ResizableHandle withHandle />}
+      <ResizableHandle withHandle />
 
-      {/* Right column — editor + console */}
-      <ResizablePanel id="workspace-panel" order={2} defaultSize={isLeftPanelOpen ? 70 : 100} minSize={40}>
+      <ResizablePanel id="workspace-panel" order={2} defaultSize={70} minSize={40}>
         <ResizablePanelGroup direction="vertical" className="h-full">
-          {/* Editor — top */}
           <ResizablePanel defaultSize={65} minSize={30} className="flex flex-col">
             {editorPanel}
           </ResizablePanel>
 
           <ResizableHandle withHandle />
 
-          {/* Console — bottom */}
           <ResizablePanel
             ref={consolePanelRef}
             defaultSize={35}
-            minSize={35}
+            minSize={8}
             collapsible
             collapsedSize={6}
-            onCollapse={onConsolePanelClose}
-            onExpand={onConsolePanelOpen}
+            onCollapse={() => onConsolePanelOpenChange(false)}
+            onExpand={() => onConsolePanelOpenChange(true)}
             className="flex flex-col"
           >
             {consolePanel}
