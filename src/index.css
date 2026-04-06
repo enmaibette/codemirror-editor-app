@@ -1,0 +1,104 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@keyframes accordion-down {
+  from { height: 0; opacity: 0; }
+  to { height: var(--radix-accordion-content-height); opacity: 1; }
+}
+@keyframes accordion-up {
+  from { height: var(--radix-accordion-content-height); opacity: 1; }
+  to { height: 0; opacity: 0; }
+}
+
+:root {
+  --background: #1E1E1E;
+  --surface: #252526;
+  --elevated: #2D2D2D;
+  --accent: #569CD6;
+  --accent-hover: #4a86bb;
+  --text: #D4D4D4;
+  --muted: #858585;
+  --border: rgba(255, 255, 255, 0.07);
+  --destructive: #F48771;
+  --destructive-hover: #d4705c;
+  --row-hover: #333333;
+  --success: #3fb950;
+  --warning: #d29922;
+}
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+
+  html,
+  body,
+  #root {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    background-color: var(--background);
+    color: var(--text);
+    font-family:
+      -apple-system,
+      BlinkMacSystemFont,
+      'Segoe UI',
+      Roboto,
+      Oxygen,
+      Ubuntu,
+      Cantarell,
+      sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Thin scrollbar styling */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 3px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.25);
+  }
+
+  /* Inline code tag styling */
+  code {
+    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+    background-color: var(--elevated);
+    color: var(--accent);
+    padding: 0.1em 0.35em;
+    border-radius: 3px;
+    font-size: 0.875em;
+  }
+
+  /* Shiki code block overrides */
+  .shiki {
+    padding: 1rem;
+    border-radius: 6px;
+    overflow-x: auto;
+    font-size: 13px;
+    line-height: 1.6;
+    background-color: var(--elevated) !important;
+  }
+
+  .shiki code {
+    background: none;
+    padding: 0;
+    color: inherit;
+    font-size: inherit;
+  }
+}

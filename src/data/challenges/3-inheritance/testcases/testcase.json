@@ -1,0 +1,18 @@
+[
+  {
+	"id": "tc1",
+	"title": "Test Case 1: Dog speak",
+	"expected": "Woof!",
+	"got": "—",
+	"status": "pending"
+  },
+  {
+	"id": "tc2",
+	"title": "Test Case 2: Cat speak",
+	"expected": "Meow!",
+	"got": "—",
+	"status": "pending"
+  }
+]
+
+

@@ -1,0 +1,25 @@
+[
+  {
+	"id": "tc1",
+	"title": "Test Case 1: Basic deposit and withdrawal",
+	"expected": "1300",
+	"got": "—",
+	"status": "pending"
+  },
+  {
+	"id": "tc2",
+	"title": "Test Case 2: Insufficient balance",
+	"expected": "No withdrawal",
+	"got": "—",
+	"status": "pending"
+  },
+  {
+	"id": "tc3",
+	"title": "Test Case 3: Multiple operations",
+	"expected": "1300",
+	"got": "—",
+	"status": "pending"
+  }
+]
+
+

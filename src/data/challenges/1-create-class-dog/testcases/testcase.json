@@ -1,0 +1,18 @@
+[
+  {
+	"id": "tc1",
+	"title": "Test Case 1: Dog name attribute",
+	"expected": "Rex",
+	"got": "—",
+	"status": "pending"
+  },
+  {
+	"id": "tc2",
+	"title": "Test Case 2: Dog instance creation",
+	"expected": "<class Dog>",
+	"got": "—",
+	"status": "pending"
+  }
+]
+
+
