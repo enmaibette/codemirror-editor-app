@@ -46,8 +46,7 @@ export function SplitLayout({
     if (!panel) return;
 
     if (isConsolePanelOpen && panel.isCollapsed()) {
-     // panel.expand();
-      panel.resize(50)
+      panel.expand();
     }
 
     if (!isConsolePanelOpen && !panel.isCollapsed()) {

@@ -8,6 +8,16 @@ export default defineConfig({
   resolve: {
     alias: { '@': path.resolve(__dirname, './src') },
   },
+  optimizeDeps: {
+    exclude: ['pyodide'], // ← Pyodide aus Vite optimizer rausnehmen
+  },
+  server: {
+    headers: {
+      // Nötig für Web Worker + SharedArrayBuffer (Pyodide braucht das)
+      'Cross-Origin-Opener-Policy': 'same-origin',
+      'Cross-Origin-Embedder-Policy': 'require-corp',
+    },
+  },
   test: {
     globals: true,
     environment: 'jsdom',
