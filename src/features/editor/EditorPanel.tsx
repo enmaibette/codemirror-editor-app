@@ -1,9 +1,23 @@
 import { memo, useEffect, useRef, useState } from 'react';
-import { FileCode, Folder, FolderOpen, X } from 'lucide-react';
+import {
+  ChevronRightIcon,
+  FileCode,
+  FileIcon,
+  Folder,
+  FolderIcon,
+  FolderOpen,
+  X,
+} from 'lucide-react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { useCodeMirror } from '@/features/editor/useCodeMirror.ts';
 import { useChallengeStore } from '@/stores/challengeStore.ts';
-import { Drawer, DrawerTrigger } from '@/components/ui/drawer.tsx';
+import { Card, CardContent, CardHeader } from '@/components/ui/card.tsx';
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from '@/components/ui/collapsible.tsx';
+import { Button } from '@/components/ui/button.tsx';
 
 
 export const EditorPanel = memo(function EditorPanel() {
@@ -41,20 +55,51 @@ export const EditorPanel = memo(function EditorPanel() {
     return () => document.removeEventListener('mousedown', handleMouseDown);
   }, [showExplorer]);
 
-  return (
-    <div className="flex flex-col h-full bg-(--surface)">
-      <Tabs
-        value={activeFilePath ?? ''}
-        onValueChange={setActiveFile}
-        className="flex flex-col h-full"
+  const renderItem = (fileItem: any) => {
+    if ('items' in fileItem) {
+      return (
+        <Collapsible key={fileItem.name}>
+          <CollapsibleTrigger>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="group w-full justify-start transition-none hover:bg-accent hover:text-accent-foreground"
+              >
+                <ChevronRightIcon className="transition-transform group-data-[state=open]:rotate-90" />
+                <FolderIcon />
+                {fileItem.name}
+              </Button>
+          </CollapsibleTrigger>
+          <CollapsibleContent className="mt-1 ml-5 style-lyra:ml-4">
+            <div className="flex flex-col gap-1">
+              {fileItem.items.map((child: any) => renderItem(child))}
+            </div>
+          </CollapsibleContent>
+        </Collapsible>
+      );
+    }
+    return (
+      <Button
+        key={fileItem.name}
+        variant="link"
+        size="sm"
+        className="w-full justify-start gap-2 text-foreground"
       >
-        <div className={'flex border-b border-(--border)'}>
-          <TabsList variant="line" className={'px-2 flex-1 border-b-transparent border-r border-(--border)'}>
+        <FileIcon />
+        <span>{fileItem.name}</span>
+      </Button>
+    );
+  };
+  return (
+    <div className="flex h-full w-full bg-(--surface)">
+      <Tabs value={activeFilePath ?? ''} onValueChange={setActiveFile} className="flex-1 h-full">
+        <div className={'flex justify-between'}>
+          <TabsList variant="line">
             {openFiles.map((f) => (
               <TabsTrigger
                 key={f.path}
                 value={f.path}
-                className="border-r-(--border) data-[state=active]:text-(--text) data-[state=active]:border-b-transparent data-[state=active]:border-r-(--border)"
+                className="border-r-(--border) data-[state=active]:text-(--text) data-[state=active]:after:!opacity-0"
               >
                 <span>{f.path.split('/').pop() ?? f.path}</span>
                 <span
@@ -73,12 +118,14 @@ export const EditorPanel = memo(function EditorPanel() {
           </TabsList>
 
           {/* Folder toggle button */}
-          <div ref={explorerRef} className="relative shrink-0">
-            <Drawer>
-              <DrawerTrigger>
+          <Card className="mx-auto w-full max-w-[16rem] gap-2" size="sm">
+            <CardHeader>Files</CardHeader>
+            <CardContent>
+              <div className="flex flex-col gap-1">{allFiles.map((item) => renderItem(item))}</div>
+            </CardContent>
+          </Card>
 
-              </DrawerTrigger>
-            </Drawer>
+          <div ref={explorerRef} className="relative shrink-0">
             <button
               type="button"
               aria-label="Toggle file explorer"

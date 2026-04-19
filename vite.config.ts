@@ -17,6 +17,10 @@ export default defineConfig({
       'Cross-Origin-Opener-Policy': 'same-origin',
       'Cross-Origin-Embedder-Policy': 'require-corp',
     },
+    watch: {
+      usePolling: true,
+      interval: 100,
+    },
   },
   test: {
     globals: true,
