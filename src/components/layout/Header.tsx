@@ -27,8 +27,8 @@ export function Header() {
       className="
         flex items-center justify-between
         px-4 h-12 shrink-0
-        bg-[var(--surface)]
-        border-b border-[var(--border)]
+        bg-(--surface)
+        border-b border-(--border)
         z-10
       "
     >
@@ -37,7 +37,7 @@ export function Header() {
             <BreadcrumbItem>
               <Link
                 to="/"
-                className="text-[var(--accent)] font-semibold text-sm tracking-wide select-none hover:opacity-90"
+                className="text-(--accent) font-semibold text-sm tracking-wide select-none hover:opacity-90"
               >
                 {'</>'} Python OOP
               </Link>

@@ -1,9 +1,7 @@
+@import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 @import "@fontsource-variable/geist";
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
 
 @keyframes accordion-down {
   from { height: 0; opacity: 0; }
@@ -14,26 +12,98 @@
   to { height: 0; opacity: 0; }
 }
 
+@theme {
+  --font-heading: var(--font-sans);
+  --font-sans: 'Geist Variable', sans-serif;
+
+  --color-background: oklch(1 0 0);
+  --color-foreground: oklch(0.145 0 0);
+  --color-card: oklch(1 0 0);
+  --color-card-foreground: oklch(0.145 0 0);
+  --color-popover: oklch(1 0 0);
+  --color-popover-foreground: oklch(0.145 0 0);
+  --color-primary: oklch(0.205 0 0);
+  --color-primary-foreground: oklch(0.985 0 0);
+  --color-secondary: oklch(0.97 0 0);
+  --color-secondary-foreground: oklch(0.205 0 0);
+  --color-muted: oklch(0.97 0 0);
+  --color-muted-foreground: oklch(0.556 0 0);
+  --color-accent: oklch(0.97 0 0);
+  --color-accent-foreground: oklch(0.205 0 0);
+  --color-destructive: oklch(0.577 0.245 27.325);
+  --color-border: oklch(0.922 0 0);
+  --color-input: oklch(0.922 0 0);
+  --color-ring: oklch(0.708 0 0);
+  --color-sidebar: oklch(0.985 0 0);
+  --color-sidebar-foreground: oklch(0.145 0 0);
+  --color-sidebar-primary: oklch(0.205 0 0);
+  --color-sidebar-primary-foreground: oklch(0.985 0 0);
+  --color-sidebar-accent: oklch(0.97 0 0);
+  --color-sidebar-accent-foreground: oklch(0.205 0 0);
+  --color-sidebar-border: oklch(0.922 0 0);
+  --color-sidebar-ring: oklch(0.708 0 0);
+
+  --radius: 0.625rem;
+}
+
+/* Custom VS Code-style design tokens */
 :root {
-  --background: #1E1E1E;
-  --surface: #252526;
-  --elevated: #2D2D2D;
-  --accent: #569CD6;
-  --accent-hover: #4a86bb;
-  --text: #D4D4D4;
-  --muted: #858585;
-  --border: rgba(255, 255, 255, 0.07);
-  --destructive: #F48771;
-  --destructive-hover: #d4705c;
-  --row-hover: #333333;
-  --success: #3fb950;
-  --warning: #d29922;
+  --vs-background: #1E1E1E;
+  --vs-surface: #252526;
+  --vs-elevated: #2D2D2D;
+  --vs-accent: #569CD6;
+  --vs-accent-hover: #4a86bb;
+  --vs-text: #D4D4D4;
+  --vs-muted: #858585;
+  --vs-border: rgba(255, 255, 255, 0.07);
+  --vs-destructive: #F48771;
+  --vs-destructive-hover: #d4705c;
+  --vs-row-hover: #333333;
+  --vs-success: #3fb950;
+  --vs-warning: #d29922;
+
+  --background:  var(--vs-background);
+  --surface:     var(--vs-surface);
+  --elevated:    var(--vs-elevated);
+  --accent:      var(--vs-accent);
+  --text:        var(--vs-text);
+  --muted:       var(--vs-muted);
+  --border:      var(--vs-border);
+  --destructive: var(--vs-destructive);
+}
+
+.dark {
+  --color-background:                 var(--vs-background);
+  --color-foreground:                 var(--vs-text);
+  --color-card:                       var(--vs-surface);
+  --color-card-foreground:            var(--vs-text);
+  --color-popover:                    var(--vs-surface);
+  --color-popover-foreground:         var(--vs-text);
+  --color-primary:                    var(--vs-accent);
+  --color-primary-foreground:         var(--vs-background);
+  --color-secondary:                  var(--vs-elevated);
+  --color-secondary-foreground:       var(--vs-text);
+  --color-muted:                      var(--vs-elevated);
+  --color-muted-foreground:           var(--vs-muted);
+  --color-accent:                     var(--vs-accent);
+  --color-accent-foreground:          var(--vs-text);
+  --color-destructive:                var(--vs-destructive);
+  --color-border:                     var(--vs-border);
+  --color-input:                      var(--vs-elevated);
+  --color-ring:                       var(--vs-accent);
+  --color-sidebar:                    var(--vs-surface);
+  --color-sidebar-foreground:         var(--vs-text);
+  --color-sidebar-primary:            var(--vs-accent);
+  --color-sidebar-primary-foreground: var(--vs-background);
+  --color-sidebar-accent:             var(--vs-elevated);
+  --color-sidebar-accent-foreground:  var(--vs-text);
+  --color-sidebar-border:             var(--vs-border);
+  --color-sidebar-ring:               var(--vs-accent);
 }
 
 @layer base {
   * {
     box-sizing: border-box;
-    @apply border-border outline-ring/50;
   }
 
   html,
@@ -44,24 +114,26 @@
     padding: 0;
   }
 
-  body {
-    background-color: var(--background);
-    color: var(--text);
-    font-family:
-      -apple-system,
-      BlinkMacSystemFont,
-      'Segoe UI',
-      Roboto,
-      Oxygen,
-      Ubuntu,
-      Cantarell,
-      sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    @apply bg-background text-foreground;
+  html {
+    font-family: var(--font-sans);
   }
 
-  /* Thin scrollbar styling */
+  body {
+    background-color: var(--vs-background);
+    color: var(--vs-text);
+    font-family:
+            -apple-system,
+            BlinkMacSystemFont,
+            'Segoe UI',
+            Roboto,
+            Oxygen,
+            Ubuntu,
+            Cantarell,
+            sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
   ::-webkit-scrollbar {
     width: 6px;
     height: 6px;
@@ -80,24 +152,22 @@
     background: rgba(255, 255, 255, 0.25);
   }
 
-  /* Inline code tag styling */
   code {
     font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
-    background-color: var(--elevated);
-    color: var(--accent);
+    background-color: var(--vs-elevated);
+    color: var(--vs-accent);
     padding: 0.1em 0.35em;
     border-radius: 3px;
     font-size: 0.875em;
   }
 
-  /* Shiki code block overrides */
   .shiki {
     padding: 1rem;
     border-radius: 6px;
     overflow-x: auto;
     font-size: 13px;
     line-height: 1.6;
-    background-color: var(--elevated) !important;
+    background-color: var(--vs-elevated) !important;
   }
 
   .shiki code {
@@ -105,14 +175,5 @@
     padding: 0;
     color: inherit;
     font-size: inherit;
-  }
-  .theme { --font-heading: var(--font-sans); --font-sans: 'Geist Variable', sans-serif;
-  }
-  :root { --background: oklch(1 0 0); --foreground: oklch(0.145 0 0); --card: oklch(1 0 0); --card-foreground: oklch(0.145 0 0); --popover: oklch(1 0 0); --popover-foreground: oklch(0.145 0 0); --primary: oklch(0.205 0 0); --primary-foreground: oklch(0.985 0 0); --secondary: oklch(0.97 0 0); --secondary-foreground: oklch(0.205 0 0); --muted: oklch(0.97 0 0); --muted-foreground: oklch(0.556 0 0); --accent: oklch(0.97 0 0); --accent-foreground: oklch(0.205 0 0); --destructive: oklch(0.577 0.245 27.325); --border: oklch(0.922 0 0); --input: oklch(0.922 0 0); --ring: oklch(0.708 0 0); --chart-1: oklch(0.87 0 0); --chart-2: oklch(0.556 0 0); --chart-3: oklch(0.439 0 0); --chart-4: oklch(0.371 0 0); --chart-5: oklch(0.269 0 0); --radius: 0.625rem; --sidebar: oklch(0.985 0 0); --sidebar-foreground: oklch(0.145 0 0); --sidebar-primary: oklch(0.205 0 0); --sidebar-primary-foreground: oklch(0.985 0 0); --sidebar-accent: oklch(0.97 0 0); --sidebar-accent-foreground: oklch(0.205 0 0); --sidebar-border: oklch(0.922 0 0); --sidebar-ring: oklch(0.708 0 0);
-  }
-  .dark { --background: oklch(0.145 0 0); --foreground: oklch(0.985 0 0); --card: oklch(0.205 0 0); --card-foreground: oklch(0.985 0 0); --popover: oklch(0.205 0 0); --popover-foreground: oklch(0.985 0 0); --primary: oklch(0.922 0 0); --primary-foreground: oklch(0.205 0 0); --secondary: oklch(0.269 0 0); --secondary-foreground: oklch(0.985 0 0); --muted: oklch(0.269 0 0); --muted-foreground: oklch(0.708 0 0); --accent: oklch(0.269 0 0); --accent-foreground: oklch(0.985 0 0); --destructive: oklch(0.704 0.191 22.216); --border: oklch(1 0 0 / 10%); --input: oklch(1 0 0 / 15%); --ring: oklch(0.556 0 0); --chart-1: oklch(0.87 0 0); --chart-2: oklch(0.556 0 0); --chart-3: oklch(0.439 0 0); --chart-4: oklch(0.371 0 0); --chart-5: oklch(0.269 0 0); --sidebar: oklch(0.205 0 0); --sidebar-foreground: oklch(0.985 0 0); --sidebar-primary: oklch(0.488 0.243 264.376); --sidebar-primary-foreground: oklch(0.985 0 0); --sidebar-accent: oklch(0.269 0 0); --sidebar-accent-foreground: oklch(0.985 0 0); --sidebar-border: oklch(1 0 0 / 10%); --sidebar-ring: oklch(0.556 0 0);
-  }
-  html {
-    @apply font-sans;
   }
 }

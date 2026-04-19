@@ -3,6 +3,8 @@ import { FileCode, Folder, FolderOpen, X } from 'lucide-react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { useCodeMirror } from '@/features/editor/useCodeMirror.ts';
 import { useChallengeStore } from '@/stores/challengeStore.ts';
+import { Drawer, DrawerTrigger } from '@/components/ui/drawer.tsx';
+
 
 export const EditorPanel = memo(function EditorPanel() {
   const editorContent = useChallengeStore((state) => state.editorContent);
@@ -40,19 +42,19 @@ export const EditorPanel = memo(function EditorPanel() {
   }, [showExplorer]);
 
   return (
-    <div className="flex flex-col h-full bg-[var(--surface)]">
+    <div className="flex flex-col h-full bg-(--surface)">
       <Tabs
         value={activeFilePath ?? ''}
         onValueChange={setActiveFile}
         className="flex flex-col h-full"
       >
-        <div className={'flex items-center border-b border-[var(--border)] shrink-0'}>
-          <TabsList className={'px-2 flex-1 border-b-0 border-r border-[var(--border)]'}>
+        <div className={'flex border-b border-(--border)'}>
+          <TabsList variant="line" className={'px-2 flex-1 border-b-transparent border-r border-(--border)'}>
             {openFiles.map((f) => (
               <TabsTrigger
                 key={f.path}
                 value={f.path}
-                className="group flex items-center gap-1 pr-1 border-r border-r-[var(--border)] data-[state=active]:text-[var(--text)] data-[state=active]:border-b-transparent data-[state=active]:border-r-[var(--border)]"
+                className="border-r-(--border) data-[state=active]:text-(--text) data-[state=active]:border-b-transparent data-[state=active]:border-r-(--border)"
               >
                 <span>{f.path.split('/').pop() ?? f.path}</span>
                 <span
@@ -81,20 +83,20 @@ export const EditorPanel = memo(function EditorPanel() {
               type="button"
               aria-label="Toggle file explorer"
               aria-expanded={showExplorer}
-              className="p-2 text-[var(--muted)] hover:text-[var(--text)]"
+              className="p-2 text-(--muted) hover:text-(--text)"
               onClick={() => setShowExplorer((v) => !v)}
             >
               {showExplorer ? <FolderOpen className="h-4 w-4" /> : <Folder className="h-4 w-4" />}
             </button>
 
             {showExplorer && (
-              <div className="absolute right-0 top-full z-50 min-w-48 rounded-md border border-[var(--border)] bg-[var(--surface)] shadow-lg">
-                <div className="px-3 py-2 text-xs font-semibold uppercase tracking-wider text-[var(--muted)] border-b border-[var(--border)]">
+              <div className="absolute right-0 top-full z-50 min-w-48 rounded-md border border-(--border) bg-(--surface) shadow-lg">
+                <div className="px-3 py-2 text-xs font-semibold uppercase tracking-wider text-(--muted) border-b border-(--border)">
                   Files
                 </div>
                 <ul className="py-1">
                   {allFiles.length === 0 && (
-                    <li className="px-3 py-2 text-xs text-[var(--muted)]">No files</li>
+                    <li className="px-3 py-2 text-xs text-(--muted)">No files</li>
                   )}
                   {allFiles.map((f) => {
                     const filename = f.path.split('/').pop() ?? f.path;
@@ -107,8 +109,8 @@ export const EditorPanel = memo(function EditorPanel() {
                           className={[
                             'flex w-full items-center gap-2 px-3 py-1.5 text-sm text-left',
                             isActive
-                              ? 'bg-[var(--border)] text-[var(--text)]'
-                              : 'text-[var(--muted)] hover:bg-[var(--border)] hover:text-[var(--text)]',
+                              ? 'bg-(--border) text-(--text)'
+                              : 'text-(--muted) hover:bg-(--border) hover:text-(--text)',
                           ].join(' ')}
                           onClick={() => {
                             openFile(f.path);
@@ -128,7 +130,7 @@ export const EditorPanel = memo(function EditorPanel() {
         </div>
 
         <TabsContent value={activeFilePath ?? ''} className="flex-1 overflow-y-auto">
-          <div className="flex h-full w-full overflow-hidden bg-[var(--background)]">
+          <div className="flex h-full w-full overflow-hidden bg-(--background)">
             <div ref={editorRef} className="flex-1 h-full" />
           </div>
         </TabsContent>

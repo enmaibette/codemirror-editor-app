@@ -36,10 +36,10 @@ export function ShikiCodeBlock({ code, lang = 'python' }: ShikiCodeBlockProps) {
 
   if (isLoading) {
     return (
-      <div className="rounded-md bg-[var(--elevated)] p-4 animate-pulse">
-        <div className="h-3 bg-[var(--border)] rounded w-3/4 mb-2" />
-        <div className="h-3 bg-[var(--border)] rounded w-1/2 mb-2" />
-        <div className="h-3 bg-[var(--border)] rounded w-2/3" />
+      <div className="rounded-md bg-(--elevated) p-4 animate-pulse">
+        <div className="h-3 bg-(--border) rounded w-3/4 mb-2" />
+        <div className="h-3 bg-(--border) rounded w-1/2 mb-2" />
+        <div className="h-3 bg-(--border) rounded w-2/3" />
       </div>
     );
   }

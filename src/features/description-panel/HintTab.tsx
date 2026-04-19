@@ -13,7 +13,7 @@ interface HintTabProps {
 export function HintTab({ hints }: HintTabProps) {
   if (hints.length === 0) {
     return (
-      <div className="p-4 text-sm text-[var(--muted)]">
+      <div className="p-4 text-sm text-(--muted)">
         No hints available for this challenge.
       </div>
     );
@@ -28,7 +28,7 @@ export function HintTab({ hints }: HintTabProps) {
               <span className="text-sm">Hint {index + 1}</span>
             </AccordionTrigger>
             <AccordionContent>
-              <p className="text-sm text-[var(--text)] leading-relaxed">{hint.text}</p>
+              <p className="text-sm text-(--text) leading-relaxed">{hint.text}</p>
             </AccordionContent>
           </AccordionItem>
         ))}

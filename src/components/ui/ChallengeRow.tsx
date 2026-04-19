@@ -14,16 +14,16 @@ export function ChallengeRow({ challenge, onClick }: ChallengeRowProps) {
       className="
         w-full flex items-center justify-between
         px-5 py-4 rounded-full
-        bg-[var(--elevated)]
-        hover:bg-[var(--row-hover)]
+        bg-(--elevated)
+        hover:bg-(--row-hover)
         transition-colors duration-150
         text-left
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]
+        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--accent)
         cursor-pointer
       "
     >
-      <span className="text-sm font-medium text-[var(--text)]">{challenge.title}</span>
-      <ArrowRight className="h-5 w-5 text-[var(--accent)] shrink-0" />
+      <span className="text-sm font-medium text(--text)">{challenge.title}</span>
+      <ArrowRight className="h-5 w-5 text(--accent) shrink-0" />
     </button>
   );
 }

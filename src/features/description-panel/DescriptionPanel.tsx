@@ -20,10 +20,11 @@ export const DescriptionPanel = memo(function DescriptionPanel({
   onOpenChange,
   isOpen,
 }: DescriptionPanelProps) {
+  console.log("isOpen", isOpen)
   return (
-    <div className="flex flex-col h-full bg-[var(--surface)] border-r border-[var(--border)]">
+    <div className="flex flex-col h-full bg-(--surface) border-r border-(--border)">
       <Tabs
-        value={isOpen ? activeTab : ''}
+        value={activeTab}
         orientation={isOpen ? 'horizontal' : 'vertical'}
         onValueChange={(v) => {
           if (!isOpen) onOpenChange(true);
@@ -32,13 +33,16 @@ export const DescriptionPanel = memo(function DescriptionPanel({
         className="flex flex-col h-full"
       >
         <div className={isOpen
-          ? 'flex items-center border-b border-[var(--border)] shrink-0'
+          ? 'flex items-center border-b border-(--border) shrink-0'
           : 'flex flex-col items-center py-1 shrink-0'
         }>
-          <TabsList className={isOpen
-            ? 'px-2 flex-1 border-b-0'
-            : 'flex flex-col h-auto bg-transparent gap-1 p-1'
-          }>
+          <TabsList
+            variant="line"
+            className={isOpen
+              ? 'px-2 flex-1 border-b-0'
+              : 'flex flex-col h-auto bg-transparent gap-1 p-1'
+            }
+          >
             <TabsTrigger value="description">
               {isOpen ? 'Description' : <FileText className="h-4 w-4" />}
             </TabsTrigger>
@@ -50,7 +54,7 @@ export const DescriptionPanel = memo(function DescriptionPanel({
             type="button"
             aria-label="Close description panel"
             onClick={() => onOpenChange(false)}
-            className="p-2 text-[var(--muted)] hover:text-[var(--text)] shrink-0"
+            className="p-2 text-(--muted) hover:text-(--text)"
           >
             <X className="h-4 w-4" />
           </button>)}

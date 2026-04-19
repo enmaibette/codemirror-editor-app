@@ -12,15 +12,15 @@ export function TestCaseCard({ testCase }: TestCaseCardProps) {
       <CardContent className="p-3">
         <div className="flex items-start justify-between gap-2">
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium text-[var(--text)] truncate">{testCase.title}</p>
+            <p className="text-sm font-medium text-(--text) truncate">{testCase.title}</p>
             <div className="mt-1.5 flex flex-wrap gap-x-4 gap-y-1">
-              <span className="text-xs text-[var(--muted)]">
+              <span className="text-xs text-(--muted)">
                 Expected:{' '}
-                <span className="font-mono text-[var(--text)]">{testCase.expected}</span>
+                <span className="font-mono text-(--text)">{testCase.expected}</span>
               </span>
-              <span className="text-xs text-[var(--muted)]">
+              <span className="text-xs text-(--muted)">
                 Got:{' '}
-                <span className="font-mono text-[var(--text)]">{testCase.got}</span>
+                <span className="font-mono text-(--text)">{testCase.got}</span>
               </span>
             </div>
           </div>

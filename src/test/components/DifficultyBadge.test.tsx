@@ -21,21 +21,21 @@ describe('DifficultyBadge', () => {
   it('applies green color class for Easy', () => {
     const { container } = render(<DifficultyBadge difficulty="Easy" />);
     const badge = container.firstChild as HTMLElement;
-    // The easy variant uses bg-[var(--success)]
+    // The easy variant uses bg-(--success)
     expect(badge.className).toMatch(/success/);
   });
 
   it('applies yellow/orange color class for Medium', () => {
     const { container } = render(<DifficultyBadge difficulty="Medium" />);
     const badge = container.firstChild as HTMLElement;
-    // The medium variant uses bg-[var(--warning)]
+    // The medium variant uses bg-(--warning)
     expect(badge.className).toMatch(/warning/);
   });
 
   it('applies red/destructive color class for Hard', () => {
     const { container } = render(<DifficultyBadge difficulty="Hard" />);
     const badge = container.firstChild as HTMLElement;
-    // The hard variant uses bg-[var(--destructive)]
+    // The hard variant uses bg-(--destructive)
     expect(badge.className).toMatch(/destructive/);
   });
 });

@@ -8,7 +8,7 @@ interface TestCasesTabProps {
 export function TestCasesTab({ testCases }: TestCasesTabProps) {
   if (testCases.length === 0) {
     return (
-      <div className="p-4 text-sm text-[var(--muted)]">
+      <div className="p-4 text-sm text-(--muted)">
         No test cases defined for this challenge.
       </div>
     );
