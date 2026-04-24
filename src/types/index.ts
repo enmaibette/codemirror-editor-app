@@ -27,3 +27,11 @@ export interface Challenge {
   hints: Hint[];
   testCases: TestCase[];
 }
+
+export type FileTreeItem = {
+  name: string
+  path: string
+} & (
+  | {type: 'file'; children?: never}
+  | {type: 'folder'; children: FileTreeItem[]}
+  )

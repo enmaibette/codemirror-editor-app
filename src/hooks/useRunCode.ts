@@ -7,7 +7,6 @@ interface UseRunCodeReturn {
   triggerRun: () => void;
 }
 
-/** Mock: prints editor content to console. No actual code execution. */
 export function useRunCode(): UseRunCodeReturn {
   const editorContent = useChallengeStore((state) => state.editorContent);
   const clearOutput = useUIStore((state) => state.clearOutput);

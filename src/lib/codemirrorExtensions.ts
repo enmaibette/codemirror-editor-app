@@ -22,7 +22,7 @@ export function buildExtensions(onChange: (value: string) => void): Extension[] 
     EditorState.tabSize.of(4),
     indentUnit.of('    '),
     EditorView.theme({
-      "&": { height: "100%", background: "#1E1E1E" },
+      "&": { height: "100%" },
       ".cm-scroller": { overflow: "auto" },
       ".cm-content": { padding: "12px 0" },
     }),

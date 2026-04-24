@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import { EditorView } from "@codemirror/view";
 import { EditorState } from "@codemirror/state";
-import { buildExtensions } from "../../lib/codemirrorExtensions";
+import { buildExtensions } from '@/lib/codemirrorExtensions.ts';
 
 interface UseCodeMirrorOptions {
   initialDoc: string;

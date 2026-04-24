@@ -1,24 +1,35 @@
 import { memo, useEffect, useRef, useState } from 'react';
 import {
   ChevronRightIcon,
-  FileCode,
   FileIcon,
   Folder,
   FolderIcon,
-  FolderOpen,
   X,
 } from 'lucide-react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { useCodeMirror } from '@/features/editor/useCodeMirror.ts';
 import { useChallengeStore } from '@/stores/challengeStore.ts';
-import { Card, CardContent, CardHeader } from '@/components/ui/card.tsx';
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
 } from '@/components/ui/collapsible.tsx';
 import { Button } from '@/components/ui/button.tsx';
+import type { FileTreeItem } from '@/types';
+import {
+  CustomDrawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from '@/components/ui/CustomDrawer.tsx';
 
+function flatFiles(tree: FileTreeItem[]): (FileTreeItem & { type: 'file' })[] {
+  return tree.flatMap((item) =>
+    item.type === 'folder' ? flatFiles(item.children) : [item as FileTreeItem & { type: 'file' }]
+  );
+}
 
 export const EditorPanel = memo(function EditorPanel() {
   const editorContent = useChallengeStore((state) => state.editorContent);
@@ -28,22 +39,32 @@ export const EditorPanel = memo(function EditorPanel() {
   const closeFile = useChallengeStore((state) => state.closeFile);
   const openFile = useChallengeStore((state) => state.openFile);
   const openFilePaths = useChallengeStore((state) => state.openFilePaths);
-  const activeChallengeId = useChallengeStore((state) => state.activeChallengeId);
-  const challenges = useChallengeStore((state) => state.challenges);
+  const fileTree = useChallengeStore((state) => state.fileTree);
 
   const [showExplorer, setShowExplorer] = useState(false);
   const explorerRef = useRef<HTMLDivElement>(null);
 
-  const activeChallenge = challenges.find((c) => c.id === activeChallengeId);
-  const allFiles = activeChallenge?.starterCode ?? [];
-  const openFiles = allFiles.filter((f) => openFilePaths.includes(f.path));
+  const openFiles = flatFiles(fileTree).filter((f) => openFilePaths.includes(f.path));
 
   const { containerRef: editorRef } = useCodeMirror({
     initialDoc: editorContent,
     onChange: setEditorContent,
   });
 
-  // Close explorer when clicking outside
+  const tabsListRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const el = tabsListRef.current;
+    if (!el) return;
+    const handler = (e: WheelEvent) => {
+      if (e.deltaY === 0) return;
+      e.preventDefault();
+      el.scrollLeft += e.deltaY;
+    };
+    el.addEventListener('wheel', handler, { passive: false });
+    return () => el.removeEventListener('wheel', handler);
+  }, []);
+
   useEffect(() => {
     if (!showExplorer) return;
     function handleMouseDown(e: MouseEvent) {
@@ -55,24 +76,25 @@ export const EditorPanel = memo(function EditorPanel() {
     return () => document.removeEventListener('mousedown', handleMouseDown);
   }, [showExplorer]);
 
-  const renderItem = (fileItem: any) => {
-    if ('items' in fileItem) {
+  const renderItem = (item: FileTreeItem, depth = 0) => {
+    if (item.type === 'folder') {
       return (
-        <Collapsible key={fileItem.name}>
-          <CollapsibleTrigger>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="group w-full justify-start transition-none hover:bg-accent hover:text-accent-foreground"
-              >
-                <ChevronRightIcon className="transition-transform group-data-[state=open]:rotate-90" />
-                <FolderIcon />
-                {fileItem.name}
-              </Button>
+        <Collapsible key={item.path} defaultOpen={depth === 0}>
+          <CollapsibleTrigger asChild>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="group w-full justify-start transition-none hover:bg-accent hover:text-accent-foreground"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <ChevronRightIcon className="transition-transform group-data-[state=open]:rotate-90" />
+              <FolderIcon />
+              {item.name}
+            </Button>
           </CollapsibleTrigger>
-          <CollapsibleContent className="mt-1 ml-5 style-lyra:ml-4">
+          <CollapsibleContent className="mt-1 ml-5">
             <div className="flex flex-col gap-1">
-              {fileItem.items.map((child: any) => renderItem(child))}
+              {item.children.map((child) => renderItem(child, depth+1))}
             </div>
           </CollapsibleContent>
         </Collapsible>
@@ -80,100 +102,61 @@ export const EditorPanel = memo(function EditorPanel() {
     }
     return (
       <Button
-        key={fileItem.name}
+        key={item.path}
         variant="link"
         size="sm"
         className="w-full justify-start gap-2 text-foreground"
+        onClick={(e) => { e.stopPropagation(); openFile(item.path); setShowExplorer(false); }}
       >
         <FileIcon />
-        <span>{fileItem.name}</span>
+        <span>{item.name}</span>
       </Button>
     );
   };
+
   return (
-    <div className="flex h-full w-full bg-(--surface)">
+    <div className="flex h-full w-full bg-(--surface) overflow-hidden">
       <Tabs value={activeFilePath ?? ''} onValueChange={setActiveFile} className="flex-1 h-full">
-        <div className={'flex justify-between'}>
-          <TabsList variant="line">
+        <div className={'flex justify-between pr-2 gap-1'}>
+          <TabsList
+            variant="line"
+            className="overflow-x-auto overflow-y-hidden flex-1 min-w-0 flex-nowrap w-0 "
+          >
             {openFiles.map((f) => (
               <TabsTrigger
                 key={f.path}
                 value={f.path}
-                className="border-r-(--border) data-[state=active]:text-(--text) data-[state=active]:after:!opacity-0"
+                className="border-r-(--border) data-[state=active]:text-(--text) data-[state=active]:after:opacity-0! shrink-0"
               >
-                <span>{f.path.split('/').pop() ?? f.path}</span>
-                <span
-                  role="button"
-                  aria-label={`Close ${f.path.split('/').pop()}`}
-                  className="ml-1 rounded p-0.5 "
+                <span>{f.path.replace(/^[^/]+\//, '')}</span>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="ml-1 h-4 w-4 p-0 data-[state=active]:after:opacity-0!"
                   onClick={(e) => {
                     e.stopPropagation();
                     closeFile(f.path);
                   }}
                 >
                   <X className="h-3 w-3" />
-                </span>
+                </Button>
               </TabsTrigger>
             ))}
           </TabsList>
-
-          {/* Folder toggle button */}
-          <Card className="mx-auto w-full max-w-[16rem] gap-2" size="sm">
-            <CardHeader>Files</CardHeader>
-            <CardContent>
-              <div className="flex flex-col gap-1">{allFiles.map((item) => renderItem(item))}</div>
-            </CardContent>
-          </Card>
-
-          <div ref={explorerRef} className="relative shrink-0">
-            <button
-              type="button"
-              aria-label="Toggle file explorer"
-              aria-expanded={showExplorer}
-              className="p-2 text-(--muted) hover:text-(--text)"
-              onClick={() => setShowExplorer((v) => !v)}
-            >
-              {showExplorer ? <FolderOpen className="h-4 w-4" /> : <Folder className="h-4 w-4" />}
-            </button>
-
-            {showExplorer && (
-              <div className="absolute right-0 top-full z-50 min-w-48 rounded-md border border-(--border) bg-(--surface) shadow-lg">
-                <div className="px-3 py-2 text-xs font-semibold uppercase tracking-wider text-(--muted) border-b border-(--border)">
-                  Files
-                </div>
-                <ul className="py-1">
-                  {allFiles.length === 0 && (
-                    <li className="px-3 py-2 text-xs text-(--muted)">No files</li>
-                  )}
-                  {allFiles.map((f) => {
-                    const filename = f.path.split('/').pop() ?? f.path;
-                    const isOpen = openFilePaths.includes(f.path);
-                    const isActive = f.path === activeFilePath;
-                    return (
-                      <li key={f.path}>
-                        <button
-                          type="button"
-                          className={[
-                            'flex w-full items-center gap-2 px-3 py-1.5 text-sm text-left',
-                            isActive
-                              ? 'bg-(--border) text-(--text)'
-                              : 'text-(--muted) hover:bg-(--border) hover:text-(--text)',
-                          ].join(' ')}
-                          onClick={() => {
-                            openFile(f.path);
-                            setShowExplorer(false);
-                          }}
-                        >
-                          <FileCode className="h-3.5 w-3.5 shrink-0" />
-                          <span className={isOpen ? 'font-medium' : ''}>{filename}</span>
-                        </button>
-                      </li>
-                    );
-                  })}
-                </ul>
-              </div>
-            )}
-          </div>
+          <CustomDrawer direction={'right'}>
+            <DrawerTrigger>
+              <Folder className="h-4 w-4" />
+            </DrawerTrigger>
+            <DrawerContent>
+              <DrawerHeader className={'flex justify-between flex-row'}>
+                <DrawerTitle>File Explorer</DrawerTitle>
+                <DrawerClose asChild>
+                  <X className="h-4 w-4" />
+                </DrawerClose>
+              </DrawerHeader>
+              <div className="overflow-y-auto px-4">{fileTree.map((item) => renderItem(item))}</div>
+            </DrawerContent>
+          </CustomDrawer>
         </div>
 
         <TabsContent value={activeFilePath ?? ''} className="flex-1 overflow-y-auto">

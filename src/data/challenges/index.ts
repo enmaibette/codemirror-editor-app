@@ -27,7 +27,7 @@ const hintsModules = import.meta.glob('./*/hints.md', {
   query: '?raw',
 }) as Record<string, string>;
 
-const exampleCodeModules = import.meta.glob('./*/exampleCode/*.py', {
+const exampleCodeModules = import.meta.glob('./*/exampleCode/**', {
   eager: true,
   import: 'default',
   query: '?raw',
@@ -154,10 +154,10 @@ function validateAndBuildChallenge(folderName: string, files: ChallengeFiles): C
     throw new Error(`description.md id (${parsed.id}) does not match folder prefix (${prefix}) in ${folderName}.`);
   }
 
-  const starterCode = files.exampleCodeFiles.map(f =>
-    ({path:f.path,
-      content: f.content.replace(/\r\n/g, '\n').replace(/\r/g, '\n')})
-  )
+  const starterCode = files.exampleCodeFiles.map(f => ({
+    path: f.path.replace(/^\.\//, '').replace(/\/exampleCode\//, '/'),
+    content: f.content.replace(/\r\n/g, '\n').replace(/\r/g, '\n'),
+  }))
 
 
   return {

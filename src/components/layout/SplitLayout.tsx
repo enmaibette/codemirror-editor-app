@@ -28,6 +28,7 @@ export function SplitLayout({
   const leftPanelRef = useRef<PanelImperativeHandle | null>(null);
   const consolePanelRef = useRef<PanelImperativeHandle | null>(null);
 
+
   useEffect(() => {
     const panel = leftPanelRef.current;
     if (!panel) return;
@@ -52,7 +53,6 @@ export function SplitLayout({
         collapsible
         collapsedSize={30}
         onResize={(size) => {
-          console.log(size);
           onLeftPanelOpenChange(size.inPixels > 32);
         }}
       >
