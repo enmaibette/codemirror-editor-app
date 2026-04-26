@@ -1,11 +1,5 @@
 import { memo, useEffect, useRef, useState } from 'react';
-import {
-  ChevronRightIcon,
-  FileIcon,
-  Folder,
-  FolderIcon,
-  X,
-} from 'lucide-react';
+import { ChevronRightIcon, FileIcon, Folder, FolderIcon, X } from 'lucide-react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { useCodeMirror } from '@/features/editor/useCodeMirror.ts';
 import { useChallengeStore } from '@/stores/challengeStore.ts';
@@ -94,7 +88,7 @@ export const EditorPanel = memo(function EditorPanel() {
           </CollapsibleTrigger>
           <CollapsibleContent className="mt-1 ml-5">
             <div className="flex flex-col gap-1">
-              {item.children.map((child) => renderItem(child, depth+1))}
+              {item.children.map((child) => renderItem(child, depth + 1))}
             </div>
           </CollapsibleContent>
         </Collapsible>
@@ -106,7 +100,11 @@ export const EditorPanel = memo(function EditorPanel() {
         variant="link"
         size="sm"
         className="w-full justify-start gap-2 text-foreground"
-        onClick={(e) => { e.stopPropagation(); openFile(item.path); setShowExplorer(false); }}
+        onClick={(e) => {
+          e.stopPropagation();
+          openFile(item.path);
+          setShowExplorer(false);
+        }}
       >
         <FileIcon />
         <span>{item.name}</span>
@@ -115,13 +113,20 @@ export const EditorPanel = memo(function EditorPanel() {
   };
 
   return (
-    <div className="flex h-full w-full bg-(--surface) overflow-hidden">
-      <Tabs value={activeFilePath ?? ''} onValueChange={setActiveFile} className="flex-1 h-full">
-        <div className={'flex justify-between pr-2 gap-1'}>
-          <TabsList
-            variant="line"
-            className="overflow-x-auto overflow-y-hidden flex-1 min-w-0 flex-nowrap w-0 "
-          >
+    <Tabs
+      value={activeFilePath ?? ''}
+      onValueChange={setActiveFile}
+      className="flex flex-1 w-full h-full bg-(--surface) overflow-hidden"
+    >
+      <div className={'flex justify-between pr-2 gap-1'}>
+        <div
+          className="flex-1 min-w-0 overflow-x-auto overflow-y-hidden [&::-webkit-scrollbar]:h-1 [&::-webkit-scrollbar-thumb]:rounded [&::-webkit-scrollbar-thumb]:bg-transparent hover:[&::-webkit-scrollbar-thumb]:bg-(--border)"
+          onWheel={(e) => {
+            e.preventDefault();
+            e.currentTarget.scrollLeft -= e.deltaY;
+          }}
+        >
+          <TabsList variant="line" className="flex-nowrap w-max">
             {openFiles.map((f) => (
               <TabsTrigger
                 key={f.path}
@@ -143,28 +148,28 @@ export const EditorPanel = memo(function EditorPanel() {
               </TabsTrigger>
             ))}
           </TabsList>
-          <CustomDrawer direction={'right'}>
-            <DrawerTrigger>
-              <Folder className="h-4 w-4" />
-            </DrawerTrigger>
-            <DrawerContent>
-              <DrawerHeader className={'flex justify-between flex-row'}>
-                <DrawerTitle>File Explorer</DrawerTitle>
-                <DrawerClose asChild>
-                  <X className="h-4 w-4" />
-                </DrawerClose>
-              </DrawerHeader>
-              <div className="overflow-y-auto px-4">{fileTree.map((item) => renderItem(item))}</div>
-            </DrawerContent>
-          </CustomDrawer>
         </div>
+        <CustomDrawer direction={'right'}>
+          <DrawerTrigger>
+            <Folder className="h-4 w-4" />
+          </DrawerTrigger>
+          <DrawerContent>
+            <DrawerHeader className={'flex justify-between flex-row'}>
+              <DrawerTitle>File Explorer</DrawerTitle>
+              <DrawerClose asChild>
+                <X className="h-4 w-4" />
+              </DrawerClose>
+            </DrawerHeader>
+            <div className="overflow-y-auto px-4">{fileTree.map((item) => renderItem(item))}</div>
+          </DrawerContent>
+        </CustomDrawer>
+      </div>
 
-        <TabsContent value={activeFilePath ?? ''} className="flex-1 overflow-y-auto">
-          <div className="flex h-full w-full overflow-hidden bg-(--background)">
-            <div ref={editorRef} className="flex-1 h-full" />
-          </div>
-        </TabsContent>
-      </Tabs>
-    </div>
+      <TabsContent value={activeFilePath ?? ''} className="flex-1 overflow-y-auto">
+        <div className="flex h-full w-full overflow-hidden bg-(--background)">
+          <div ref={editorRef} className="flex-1 h-full" />
+        </div>
+      </TabsContent>
+    </Tabs>
   );
 });
